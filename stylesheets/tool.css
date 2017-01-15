@@ -93,5 +93,6 @@ footer {
 
 footer span {
     color: #D8D8D8;
-    font-size: 14px;
+    font-size: 12px;
+    float: right;
 }
