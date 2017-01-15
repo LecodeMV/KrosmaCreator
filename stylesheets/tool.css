@@ -1,0 +1,97 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #221E1D;
+}
+
+#app {
+    display: flex;
+}
+
+.section {
+    margin: 15px;
+}
+
+.select-div {
+    
+}
+
+#addon3,
+#addon4,
+#addon5,
+#addon9,
+#addon13,
+#addon14,
+#addon15,
+#addon16 {
+    width: 80px;
+    min-width: 80px;
+}
+
+#addon6,
+#addon7,
+#addon8,
+#addon10 {
+    width: 60px;
+    min-width: 60px;
+}
+
+#typeSelect,
+#raritySelect,
+#classSelect,
+#familyInput {
+    width: 280px;
+}
+
+.setting-div {
+    width: 60%;
+}
+
+.card-div {
+    margin-left: 50px;
+    max-width: 322px;
+    max-height: 405px;
+    min-width: 322px;
+    min-height: 405px;
+}
+
+#loader {
+    width: 100%;
+}
+
+#progress-bar {
+    height: 20px;
+    width: 0%;
+    background-color: #8A0808;
+}
+
+#progress-bar-v {
+    height: 10px;
+    width: 0%;
+    background-color: #8A0808;
+    display: none;
+}
+
+.vignette-img {
+    width: 50%;
+    height: 50%;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #221E1D;
+    cursor: pointer;
+}
+
+#gameVignettes-row {
+    max-height: 300px;
+    overflow: auto;
+}
+
+footer {
+    color: #FFF;
+    font-size: 24px;
+    text-align: center;
+}
+
+footer span {
+    color: #D8D8D8;
+    font-size: 18px;
+}

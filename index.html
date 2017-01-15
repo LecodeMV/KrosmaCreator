@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <title>KrosmaCreator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    
+    <script src="https://unpkg.com/vue@2.1.8/dist/vue.js"></script>
+    <script src="pixi.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/tool.css" media="screen">
+    <script src="tool.js"></script>
+</head>
+
+<body>
+    <div id="progress-bar"></div>
+    <div class="section" id="app" v-show="loaded">
+        <div class="panel panel-default setting-div">
+            <div class="panel-body">
+                <div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="addon1">Nom de la carte</span>
+                        <input type="text" class="form-control" aria-describedby="addon1" v-model="cardName"
+                        v-on:change="whenNameChanged">
+                        <span class="input-group-addon" id="addon2">Extension</span>
+                        <input type="text" class="form-control" aria-describedby="addon2" v-model="cardExt">
+                    </div>
+                </div>
+                <div class="select-div">
+                    <div class="input-group" style="margin-top: 4px;">
+                        <span class="input-group-addon" id="addon9">Famille</span>
+                        <input id="familyInput" type="text" class="form-control" aria-describedby="addon9" v-model="cardFamily"
+                        v-on:change="whenFamilyChanged">
+                        <span class="input-group-addon" id="addon10">ATQ</span>
+                        <input type="number" class="form-control" aria-describedby="addon10" v-model="cardAtk"
+                        v-on:change="whenATKChanged">
+                    </div>
+                    <div class="input-group" style="margin-top: 4px;">
+                        <span class="input-group-addon" id="addon3">Type</span>
+                        <select id="typeSelect" class="form-control" aria-describedby="addon3" v-model="selectedType" 
+                        v-on:change="whenTypeSelected">
+                            <option v-for="option in types" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                        <span class="input-group-addon" id="addon6">PDV</span>
+                        <input type="number" class="form-control" aria-describedby="addon6" v-model="cardHP"
+                        v-on:change="whenHPChanged">
+                    </div>
+                    <div class="input-group" style="margin-top: 4px;">
+                        <span class="input-group-addon" id="addon4">Rareté</span>
+                        <select id="raritySelect" class="form-control" aria-describedby="addon4" v-model="selectedRarity" 
+                        v-on:change="whenRaritySelected">
+                            <option v-for="option in rarities" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                        <span class="input-group-addon" id="addon7">PA</span>
+                        <input type="number" class="form-control" aria-describedby="addon7" v-model="cardAP"
+                        v-on:change="whenAPChanged">
+                    </div>
+                    <div class="input-group" style="margin-top: 4px;">
+                        <span class="input-group-addon" id="addon5">Classe</span>
+                        <select id="classSelect" class="form-control" aria-describedby="addon5" v-model="selectedClass" 
+                        v-on:change="whenClassSelected">
+                            <option v-for="option in classes" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                        <span class="input-group-addon" id="addon8">PM</span>
+                        <input type="number" class="form-control" aria-describedby="addon8" v-model="cardMP"
+                        v-on:change="whenMPChanged">
+                    </div>
+                </div>
+                <div class="page-header">
+                    <h2>Mécanique</h2>
+                    <textarea v-on:keyup.enter="whenDescriptionChanged" v-on:keyup.space="whenDescriptionChanged"
+                    v-on:keyup.change="whenDescriptionChanged"
+                    class="form-control" rows="5" v-model="cardDescription"></textarea>
+                    <p><b>Mots clés:</b> apparition, blessé, coup de grâce, mort, mur,
+                    portée, inciblable, fin du tour, début du tour, chef, at, ar, pa, pm, pv, at,
+                    charge, assome, portée, initiative
+                    </p>
+                </div>
+                <div class="page-header">
+                    <h2>Vignette</h2>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button v-on:click="blankVignette" type="button" class="btn btn-default">Vide</button>
+                        <button v-on:click="gameVignettes" type="button" class="btn btn-default">Du jeu</button>
+                        <button v-on:click="customVignette" type="button" class="btn btn-default">Personalisée</button>
+                    </div>
+                    <div v-show="showGameVignettes || showCustomVignette" class="input-group" style="margin-top: 4px;">
+                        <span class="input-group-addon" id="addon13">Pos. X</span>
+                        <input type="decimal" class="form-control" aria-describedby="addon13" v-model="vignette.x"
+                        v-on:change="whenVignetteCoordsChanged">
+                        <span class="input-group-addon" id="addon14">Pos. Y</span>
+                        <input type="decimal" class="form-control" aria-describedby="addon14" v-model="vignette.y"
+                        v-on:change="whenVignetteCoordsChanged">
+                    </div>
+                    <div v-show="showGameVignettes || showCustomVignette" class="input-group" style="margin-top: 4px;">
+                        <span class="input-group-addon" id="addon15">Zoom X</span>
+                        <input type="decimal" class="form-control" aria-describedby="addon15" v-model="vignette.scale.x"
+                        v-on:change="whenVignetteCoordsChanged">
+                        <span class="input-group-addon" id="addon16">Zoom Y</span>
+                        <input type="decimal" class="form-control" aria-describedby="addon16" v-model="vignette.scale.y"
+                        v-on:change="whenVignetteCoordsChanged">
+                    </div>
+                </div>
+                <div id="progress-bar-v"></div>
+                <div v-show="showGameVignettes">
+                    <div class="input-group" style="margin-top: 4px;">
+                        <span class="input-group-addon" id="addon11">Categorie</span>
+                        <select id="classSelect" class="form-control" aria-describedby="addon11" v-model="selectedVignetteCateg">
+                            <option v-for="option in vignetteCategories" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                        <button v-on:click="loadVignettes" type="button" class="btn btn-default">Charger</button>
+                    </div>
+                    <div id="gameVignettes-row" class="row" style="margin-top: 4px;">
+                        
+                    </div>
+                </div>
+                <div v-show="showCustomVignette">
+                    <div class="input-group" style="margin-top: 4px;">
+                        <span class="input-group-addon" id="addon17">Lien de l'image</span>
+                        <input style="width: 300px;" type="text" class="form-control" aria-describedby="addon17" v-model="vignetteCustomLink">
+                        <button v-on:click="loadCustomVignette" type="button" class="btn btn-default">Charger</button>
+                    </div>
+                    <p> Le lien doit être le lien exact de l'image, se terminant par <b>.png</b>, <b>.bmp</b> et autre.
+                        Hébergez votre image sur <b>imgur</b> de préférence car l'outils n'a pas accès à certains domaines.
+                        Exemple: <b>http://i.imgur.com/8aB1Mv8.png</b>
+                    </p>
+                </div>
+                <div class="page-header">
+                    <h2>Valider</h2>
+                </div>
+                <button v-on:click="generate" type="button" class="btn btn-primary">Generer</button>
+                <p>Une image va apparaître ci-dessous. Faites "enregistrer sous".</p>
+                <img id="cardResult" src=""></img>
+            </div>
+        </div>
+        <div class="panel panel-default card-div">
+            <div class="panel-body" id="render-div">
+            </div>
+        </div>
+    </div>
+    <footer>
+        <b>KrosmaCreator</b><span> Par Mhylda</span>
+    </footer>
+</body>
+
+</html>
